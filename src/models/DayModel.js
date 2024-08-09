@@ -4,21 +4,20 @@
 export class Day {
 
 	/**
-	 * @type {Moment}
-	 */
-	date = null;
-
-	/**
 	 * @param {Moment} date date of the month
 	 * @param {Boolean} active
 	 */
 	constructor(date, active = true) {
+
+		// current date
 		this.date = date;
+
+		// if day is active or not; boolean prop to do extra conditions
 		this.active = active;
 	}
 
 	/**
-	 * Retourne le jour du mois
+	 * Number of day in month
 	 * @returns {number}
 	 */
 	get number() {

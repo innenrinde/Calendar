@@ -1,5 +1,5 @@
-import {Week} from "@/models/WeekModel";
-import {markRaw} from "vue";
+import { Week } from "@/models/WeekModel";
+import { markRaw } from "vue";
 
 /**
  * Model for a month
@@ -11,10 +11,6 @@ export class Month {
 	 * @type {[Week]}
 	 */
 	weeks = [];
-
-	constructor() {
-		this.weeks = [];
-	}
 
 	/**
 	 * Add a day to the last week of month

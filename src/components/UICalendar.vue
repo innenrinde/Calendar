@@ -26,7 +26,20 @@
 				'day_type': calendarType === DayType,
 				'week_type': calendarType === WeekType
 			}"
+			@wheel="onWheel"
 		>
+
+			<div
+				class="slide"
+				:class="{ 'slide-left': slideLeft }"
+				@transitionend="transitionLeftEnd"
+			/>
+
+			<div
+				class="slide"
+				:class="{ 'slide-right': slideRight }"
+				@transitionend="transitionRightEnd"
+			/>
 
 			<div class="blank" />
 			<div
@@ -102,12 +115,24 @@ export default {
 				type: DayType,
 				label: "Day"
 			}],
+			slideLeft: false,
+			slideRight: false,
 		};
 	},
 	computed: {
+		/**
+		 * Instead of having a computed day type
+		 * @return {DayType}
+		 * @constructor
+		 */
 		DayType() {
 			return DayType;
 		},
+		/**
+		 * Instead of having a computed week type
+		 * @return {WeekType}
+		 * @constructor
+		 */
 		WeekType() {
 			return WeekType;
 		},
@@ -169,7 +194,7 @@ export default {
 		 * @return {Promise<void>}
 		 */
 		async prevDate() {
-			this.period = this.calendarType.prevDate(this.moment(this.period).toDate());
+			this.slideRight = true;
 			this.emitSelectedDate();
 		},
 		/**
@@ -177,7 +202,7 @@ export default {
 		 * @return {Promise<void>}
 		 */
 		async nextDate() {
-			this.period = this.calendarType.nextDate(this.moment(this.period).toDate());
+			this.slideLeft = true;
 			this.emitSelectedDate();
 		},
 		/**
@@ -203,6 +228,30 @@ export default {
 		 */
 		weekDayDate(day) {
 			return day.date.format(DATE_FORMAT);
+		},
+		/**
+		 * @param event
+		 */
+		onWheel(event) {
+			if (event.deltaY > 0) {
+				this.nextDate();
+			} else {
+				this.prevDate();
+			}
+		},
+		/**
+		 * Go to right
+		 */
+		transitionRightEnd() {
+			this.period = this.calendarType.prevDate(this.moment(this.period).toDate());
+			this.slideRight = false;
+		},
+		/**
+		 * Go to left
+		 */
+		transitionLeftEnd() {
+			this.period = this.calendarType.nextDate(this.moment(this.period).toDate());
+			this.slideLeft = false;
 		},
 		/**
 		 * Retrieve current selected date
@@ -235,12 +284,12 @@ export default {
 }
 
 .header .period button {
-	padding: 10px;
-	width: 40px;
-	height: 40px;
+	padding: 7px;
+	width: 30px;
+	height: 30px;
 	border: solid 1px #a1a1a1;
 	background-color: #f1f1f1;
-	border-radius: 50px;
+	border-radius: 30px;
 	cursor: pointer;
 }
 
@@ -251,10 +300,10 @@ export default {
 .header .period label {
 	display: inline-block;
 	width: 300px;
-	padding: 10px;
+	padding: 7px;
 	margin: 0 5px 0 5px;
 	border: solid 1px #a1a1a1;
-	border-radius: 10px;
+	border-radius: 7px;
 }
 
 .header .types {
@@ -262,13 +311,14 @@ export default {
 }
 
 .header .types button {
-	padding: 10px;
+	padding: 5px;
 	margin-right: 4px;
-	width: 100px;
+	width: 80px;
 	border: solid 1px #a1a1a1;
 	background-color: #f1f1f1;
-	border-radius: 10px;
+	border-radius: 7px;
 	cursor: pointer;
+	font-size: 12px;
 }
 
 .header .types button.selected,
@@ -278,19 +328,19 @@ export default {
 
 .calendar {
 	display: grid;
-	grid-template-columns: 40px repeat(7, auto);
-	grid-template-rows: 40px repeat(5, auto);
+	grid-template-columns: 30px repeat(7, auto);
+	grid-template-rows: 30px repeat(5, auto);
 	gap: 1px;
 	height: 100%;
 }
 
 .week_type {
-	grid-template-rows: 40px auto;
+	grid-template-rows: 30px auto;
 }
 
 .day_type {
-	grid-template-columns: 40px auto;
-	grid-template-rows: 40px auto;
+	grid-template-columns: 30px auto;
+	grid-template-rows: 30px auto;
 }
 
 .calendar > div {
@@ -321,6 +371,31 @@ export default {
 	opacity: 0.6;
 	background-color: #f1f1f1;
 	color: #9d9d9d;
+}
+
+
+.slide {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+	opacity: 0.6;
+	border: none !important;
+	visibility: hidden;
+}
+
+.slide-right,
+.slide-left {
+	visibility: visible;
+	transition: all .30s ease;
+}
+
+.slide-right {
+	transform: translateX(100%) rotate(0deg);
+}
+
+.slide-left {
+	transform: translateX(-100%) rotate(0deg);
 }
 
 </style>

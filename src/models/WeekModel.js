@@ -10,15 +10,14 @@ export class Week {
 	#days = [];
 
 	/**
-	 * @type {Moment}
-	 */
-	date = null;
-
-	/**
 	 * @param {Moment} date
 	 */
-	constructor(date) {
+	constructor(date= null) {
+
+		// current date
 		this.date = date;
+
+		// list of week days
 		this.#days = [];
 	}
 
