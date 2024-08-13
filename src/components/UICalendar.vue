@@ -24,22 +24,13 @@
 			class="calendar"
 			:class="{
 				'day_type': calendarType === DayType,
-				'week_type': calendarType === WeekType
+				'week_type': calendarType === WeekType,
+				'slide-left': slideLeft,
+				'slide-right': slideRight
 			}"
 			@wheel="onWheel"
+			@transitionend="transitionEnd"
 		>
-
-			<div
-				class="slide"
-				:class="{ 'slide-left': slideLeft }"
-				@transitionend="transitionLeftEnd"
-			/>
-
-			<div
-				class="slide"
-				:class="{ 'slide-right': slideRight }"
-				@transitionend="transitionRightEnd"
-			/>
 
 			<div class="blank" />
 			<div
@@ -240,18 +231,16 @@ export default {
 			}
 		},
 		/**
-		 * Go to right
+		 * End of transition left or right
 		 */
-		transitionRightEnd() {
-			this.period = this.calendarType.prevDate(this.moment(this.period).toDate());
-			this.slideRight = false;
-		},
-		/**
-		 * Go to left
-		 */
-		transitionLeftEnd() {
-			this.period = this.calendarType.nextDate(this.moment(this.period).toDate());
+		transitionEnd() {
+			if (this.slideLeft) {
+				this.period = this.calendarType.nextDate(this.moment(this.period).toDate());
+			} else if (this.slideRight) {
+				this.period = this.calendarType.prevDate(this.moment(this.period).toDate());
+			}
 			this.slideLeft = false;
+			this.slideRight = false;
 		},
 		/**
 		 * Retrieve current selected date
@@ -373,17 +362,6 @@ export default {
 	color: #9d9d9d;
 }
 
-
-.slide {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	background-color: #ffffff;
-	opacity: 0.6;
-	border: none !important;
-	visibility: hidden;
-}
-
 .slide-right,
 .slide-left {
 	visibility: visible;
@@ -397,5 +375,4 @@ export default {
 .slide-left {
 	transform: translateX(-100%) rotate(0deg);
 }
-
 </style>
