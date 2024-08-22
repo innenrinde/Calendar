@@ -1,12 +1,21 @@
 import moment from "moment";
+import {AbstractType} from "@/types/AbstractType";
 
-export class WeekType {
+/**
+ * Calendar view week by week
+ */
+class WeekType extends AbstractType {
+
+	/**
+	 * @inheritDoc
+	 */
+	unit = "week";
 
 	/**
 	 * @param {Date} date
 	 * @returns {string}
 	 */
-	static title(date) {
+	title(date) {
 		let dateStart = moment(date)
 			.startOf("week")
 			.format("DD MMMM YYYY");
@@ -22,7 +31,7 @@ export class WeekType {
 	 * @param {Date} date
 	 * @returns {Date}
 	 */
-	static nextDate(date) {
+	nextDate(date) {
 		return new moment(date).add(1, "week").toDate();
 	}
 
@@ -30,18 +39,22 @@ export class WeekType {
 	 * @param {Date} date
 	 * @returns {Date}
 	 */
-	static prevDate(date) {
+	prevDate(date) {
 		return new moment(date).subtract(1, "week").toDate();
 	}
 
 	/**
 	 * @param {Date} date
-	 * @returns {moment.Moment[]}
+	 * @returns {[Moment]}
 	 */
-	static interval(date) {
+	interval(date) {
 		let dateStart = moment(date).startOf("week");
 		let dateEnd = moment(date).endOf("week");
 
 		return [dateStart, dateEnd];
 	}
 }
+
+const instance = new WeekType();
+
+export { instance as WeekType };

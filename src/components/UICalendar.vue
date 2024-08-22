@@ -2,11 +2,6 @@
 	<div class="container">
 
 		<div class="header">
-			<div class="period">
-				<button @click="prevDate">&lt;</button>
-				<label>{{ title }}</label>
-				<button @click="nextDate">&gt;</button>
-			</div>
 
 			<div class="types">
 				<button
@@ -15,20 +10,31 @@
 					:class="{ 'selected': calendarType === calendar.type }"
 					@click="switchCalendarType(calendar.type)"
 				>
-				{{ calendar.label }}
+					{{ calendar.label }}
 				</button>
 			</div>
+
+			<u-i-period
+				class="period"
+				:title="title"
+				:period="period"
+				:calendar-type="calendarType"
+				@nextDate="nextDate"
+				@prevDate="prevDate"
+				@setDate="setDate"
+			/>
+
 		</div>
 
 		<div
 			class="calendar"
 			:class="{
-				'day_type': calendarType === DayType,
-				'week_type': calendarType === WeekType,
+				'day_type': isDayType(),
+				'week_type': isWeekType(),
 				'slide-left': slideLeft,
 				'slide-right': slideRight
 			}"
-			@wheel="onWheel"
+			@wheel.passive="onWheel"
 			@transitionend="transitionEnd"
 		>
 
@@ -73,25 +79,30 @@
 
 import {Month} from "@/models/MonthModel";
 import {Day} from "@/models/DayModel";
-import {MonthType} from "@/lib/MonthType";
-import {WeekType} from "@/lib/WeekType";
-import {DayType} from "@/lib/DayType";
+import {MonthType} from "@/types/MonthType";
+import {WeekType} from "@/types/WeekType";
+import {DayType} from "@/types/DayType";
+import UIPeriod from "@/components/UIPeriod.vue";
 import moment from "moment";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
 export default {
 	name: "UICalendar",
+	components: {UIPeriod},
 	props: {
-		dataCy: {
-			type: String,
-			default: null
-		},
 		currentPeriod: {
 			type: String,
 			default: () => moment().format("YYYY-MM-DD"),
 		},
+		locale: {
+			type: String,
+			validator(value) {
+				return ["ro", "en"].includes(value);
+			}
+		}
 	},
+	emits: ["currentDate"],
 	data() {
 		return {
 			period: null, // current period viewed in the calendar
@@ -136,10 +147,10 @@ export default {
 		},
 		/**
 		 * Return week days as array of strings (short names of days)
-		 * @return {string[]}
+		 * @return {[String]}
 		 */
 		weekDays() {
-			if (this.calendarType === DayType) {
+			if (this.isDayType()) {
 				return [this.moment(this.period).format("ddd")];
 			}
 			return Array.from(this.moment.weekdaysShort(true));
@@ -169,22 +180,37 @@ export default {
 	 * Init current period to instantiate calendar
 	 */
 	beforeMount() {
+		this.moment.locale(this.locale);
 		this.period = this.currentPeriod;
 	},
 	methods: {
+		/**
+		 * Check of calendar view is on monde Day
+		 * @return {boolean}
+		 */
+		isDayType() {
+			return this.calendarType instanceof DayType.constructor;
+		},
+		/**
+		 * Check of calendar view is on monde Week
+		 * @return {boolean}
+		 */
+		isWeekType() {
+			return this.calendarType instanceof WeekType.constructor;
+		},
 		/**
 		 * Choose viewing strategy
 		 * @param calendarType
 		 * @return {Promise<void>}
 		 */
-		async switchCalendarType(calendarType) {
+		switchCalendarType(calendarType) {
 			this.calendarType = calendarType;
 		},
 		/**
 		 * Calculate previously period based on chosen strategy
 		 * @return {Promise<void>}
 		 */
-		async prevDate() {
+		prevDate() {
 			this.slideRight = true;
 			this.emitSelectedDate();
 		},
@@ -192,9 +218,16 @@ export default {
 		 * Calculate next period based on chosen strategy
 		 * @return {Promise<void>}
 		 */
-		async nextDate() {
+		nextDate() {
 			this.slideLeft = true;
 			this.emitSelectedDate();
+		},
+		/**
+		 * Catch date from period component
+		 * @param value
+		 */
+		setDate(value) {
+			this.period = value;
 		},
 		/**
 		 * Check if a day is active or not - if a day is part of the current month
@@ -221,6 +254,7 @@ export default {
 			return day.date.format(DATE_FORMAT);
 		},
 		/**
+		 * Scroll left-right
 		 * @param event
 		 */
 		onWheel(event) {
@@ -234,11 +268,14 @@ export default {
 		 * End of transition left or right
 		 */
 		transitionEnd() {
+			let period = this.moment(this.period).toDate();
+
 			if (this.slideLeft) {
-				this.period = this.calendarType.nextDate(this.moment(this.period).toDate());
+				this.period = this.calendarType.nextDate(period);
 			} else if (this.slideRight) {
-				this.period = this.calendarType.prevDate(this.moment(this.period).toDate());
+				this.period = this.calendarType.prevDate(period);
 			}
+
 			this.slideLeft = false;
 			this.slideRight = false;
 		},
@@ -267,12 +304,13 @@ export default {
 	margin-bottom: 10px;
 }
 
-.header .period {
+/** period **/
+.header :deep(.period) {
 	width: 100%;
 	padding-left: 50px;
 }
 
-.header .period button {
+.header :deep(.period) button {
 	padding: 7px;
 	width: 30px;
 	height: 30px;
@@ -282,11 +320,11 @@ export default {
 	cursor: pointer;
 }
 
-.header .period button:hover {
+.header :deep(.period) button:hover {
 	background-color: #c9c9c9;
 }
 
-.header .period label {
+.header :deep(.period) .label {
 	display: inline-block;
 	width: 300px;
 	padding: 7px;
@@ -294,6 +332,24 @@ export default {
 	border: solid 1px #a1a1a1;
 	border-radius: 7px;
 }
+
+.header :deep(.period) .popup {
+	border: solid 1px #a1a1a1;
+	padding: 1px;
+}
+
+.header :deep(.period) .popup span {
+	cursor: pointer;
+	padding: 7px;
+	text-align: left;
+}
+
+.header :deep(.period) .popup span.selected,
+.header :deep(.period) .popup span:hover {
+	background-color: #5188c4;
+	color: #fff;
+}
+/** END period **/
 
 .header .types {
 	position: fixed;

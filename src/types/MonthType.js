@@ -1,22 +1,32 @@
+import {AbstractType} from "@/types/AbstractType";
 import moment from "moment";
 
-export class MonthType {
+/**
+ * Calendar view month by month
+ */
+class MonthType extends AbstractType {
+
+	/**
+	 * @inheritDoc
+	 */
+	unit = "month";
 
 	/**
 	 * @param {Date} date
+	 * @param {String} format
 	 * @returns {string}
 	 */
-	static title(date) {
+	title(date, format = "MMMM YYYY") {
 		return moment(date)
 			.startOf("month")
-			.format("MMMM YYYY");
+			.format(format);
 	}
 
 	/**
 	 * @param {Date} date
 	 * @returns {Date}
 	 */
-	static nextDate(date) {
+	nextDate(date) {
 		return new moment(date).add(1, "months").toDate();
 	}
 
@@ -24,18 +34,22 @@ export class MonthType {
 	 * @param {Date} date
 	 * @returns {Date}
 	 */
-	static prevDate(date) {
+	prevDate(date) {
 		return new moment(date).subtract(1, "months").toDate();
 	}
 
 	/**
 	 * @param {Date} date
-	 * @returns {moment.Moment[]}
+	 * @returns {[Moment]}
 	 */
-	static interval(date) {
+	interval(date) {
 		let dateStart = moment(date).startOf("month").startOf("week");
 		let dateEnd = moment(date).endOf("month").endOf("week");
 
 		return [dateStart, dateEnd];
 	}
 }
+
+const instance = new MonthType();
+
+export { instance as MonthType };

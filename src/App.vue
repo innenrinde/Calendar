@@ -1,5 +1,6 @@
 <template>
   <u-i-calendar
+		locale="en"
 		@currentDate="getCurrentDate"
 	/>
 </template>
