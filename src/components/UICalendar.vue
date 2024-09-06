@@ -34,7 +34,6 @@
 				'slide-left': slideLeft,
 				'slide-right': slideRight
 			}"
-			@wheel.passive="onWheel"
 			@transitionend="transitionEnd"
 		>
 
@@ -64,9 +63,11 @@
             'week_day_inactive': !day.active
           }"
 				>
-					<label>
-						{{ day.number }}
-					</label>
+					<u-i-events
+						:day="day"
+						:events="getEventsByDay(day)"
+						@setCurrentDate="eventsSetCurrentDate"
+					/>
 				</div>
 
 			</template>
@@ -84,12 +85,13 @@ import {WeekType} from "@/types/WeekType";
 import {DayType} from "@/types/DayType";
 import UIPeriod from "@/components/UIPeriod.vue";
 import moment from "moment";
+import UIEvents from "@/components/UIEvents.vue";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
 export default {
 	name: "UICalendar",
-	components: {UIPeriod},
+	components: {UIEvents, UIPeriod},
 	props: {
 		currentPeriod: {
 			type: String,
@@ -99,8 +101,12 @@ export default {
 			type: String,
 			validator(value) {
 				return ["ro", "en"].includes(value);
-			}
-		}
+			},
+		},
+		events: {
+			type: Array,
+			default: () => [],
+		},
 	},
 	emits: ["currentDate"],
 	data() {
@@ -254,17 +260,6 @@ export default {
 			return day.date.format(DATE_FORMAT);
 		},
 		/**
-		 * Scroll left-right
-		 * @param event
-		 */
-		onWheel(event) {
-			if (event.deltaY > 0) {
-				this.nextDate();
-			} else {
-				this.prevDate();
-			}
-		},
-		/**
 		 * End of transition left or right
 		 */
 		transitionEnd() {
@@ -276,14 +271,30 @@ export default {
 				this.period = this.calendarType.prevDate(period);
 			}
 
-			this.slideLeft = false;
-			this.slideRight = false;
+			this.slideLeft = this.slideRight = false;
+		},
+		/**
+		 * Retrieve date for selected events component
+		 * @param day
+		 */
+		eventsSetCurrentDate(day) {
+			this.setDate(day.date);
+			this.calendarType = DayType;
 		},
 		/**
 		 * Retrieve current selected date
 		 */
 		emitSelectedDate() {
 			this.$emit("currentDate", this.period);
+		},
+		/**
+		 * Get list of event by day
+		 * @param {Day} day
+		 * @return {Array}
+		 */
+		getEventsByDay(day) {
+			let date = day.date.format("YYYY-MM-DD");
+			return this.events[date] ? this.events[date] : [];
 		},
 	}
 };
@@ -373,8 +384,8 @@ export default {
 
 .calendar {
 	display: grid;
-	grid-template-columns: 30px repeat(7, auto);
-	grid-template-rows: 30px repeat(5, auto);
+	grid-template-columns: 30px repeat(7, 1fr);
+	grid-template-rows: 30px repeat(5, 1fr);
 	gap: 1px;
 	height: 100%;
 }
@@ -405,12 +416,16 @@ export default {
 }
 
 .calendar .week_day {
-	min-height: 100px;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
 }
 
+/*
 .calendar .week_day > div {
 	height: 100%;
 }
+*/
 
 .calendar .week_day_inactive {
 	opacity: 0.6;
