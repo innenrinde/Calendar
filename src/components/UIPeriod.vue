@@ -17,18 +17,32 @@
 				<span
 					v-for="item in options"
 					:key="item"
-					:class="{ 'selected': item.selected, 'no-value': !item.value }"
+					class="item"
+					:class="{ 'selected': item.selected }"
 					@click="setDate(item.value)"
 				>
-					{{ item.label }}
+					<span>{{ item.label }}</span>
+					<span
+						:style="{'background-color': item.color }"
+						class="marker"
+					>{{ item.marker }}</span>
 				</span>
 
-				<button
-					class="today"
-					@click="setTodayDate()"
-				>
-					Today
-				</button>
+				<div class="buttons">
+					<button
+						class="today-btn"
+						@click="setTodayDate()"
+					>
+						Today
+					</button>
+
+					<button
+						class="close-btn"
+						@click="showPopup()"
+					>
+						Close
+					</button>
+				</div>
 
 			</span>
 
@@ -147,6 +161,10 @@ export default {
 	cursor: pointer;
 }
 
+.label input:hover {
+	color: #2b5d93;
+}
+
 .popup {
 	position: absolute;
 	top: 35px;
@@ -157,28 +175,43 @@ export default {
 	width: auto;
 	background-color: white;
 	z-index: 999;
-	display: flex;
 	flex-direction: column;
+}
+
+.popup span.item {
+	display: flex;
+	flex-direction: row;
+}
+
+.popup span.item span:first-child {
+	width: 100%;
+}
+
+.popup span.item span {
+	white-space: nowrap;
 }
 
 .popup span:hover,
 .popup span.selected {
-	background-color: #9d9d9d;
 }
 
-.popup span.no-value {
-	border-top: solid 1px #9d9d9d;
-	border-bottom: solid 1px #9d9d9d;
-	background-color: #f1f1f1;
-	margin: 1px 0 1px 0;
-	font-weight: bold;
-	text-align: right !important;
-	padding-top: 2px !important;
-	padding-bottom: 2px !important;
+.buttons {
+	display: flex;
+	flex-direction: row;
 }
 
-.today {
+.buttons button {
 	border-radius: 2px !important;
-	width: 100% !important;
+	margin: 2px;
 }
+
+.today-btn {
+	width: 70% !important;
+}
+
+.close-btn {
+	width: 30% !important;
+}
+
+
 </style>

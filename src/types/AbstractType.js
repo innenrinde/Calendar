@@ -6,6 +6,12 @@ import moment from "moment/moment";
 export class AbstractType {
 
 	/**
+	 * Available colors for right markers in list of periods
+	 * @type {array}
+	 */
+	colors = ["#e9bcf6", "#fef8e5", "#b3e5ff", "#c4c3f4", "#fedcbc"];
+
+	/**
 	 * Default type of unit for calendar view
 	 * @type {DurationInputArg2}
 	 */
@@ -43,19 +49,14 @@ export class AbstractType {
 
 		let items = [];
 		while (items.length < 15) {
+
 			items.push({
-				label: this.title(currentDate.toDate()),
+				label: this.periodTitle(currentDate.toDate()),
 				value: moment(currentDate),
-				selected: this.isEquals(currentDate, date)
+				selected: this.isEquals(currentDate, date),
+				marker: this.markerLabel(currentDate),
+				color: this.colors[this.marker(currentDate)%5]
 			});
-
-			let stepPeriod = this.checkStepPeriod(currentDate);
-
-			if (stepPeriod) {
-				items.push({
-					label: stepPeriod,
-				});
-			}
 
 			currentDate.add(1, this.unit);
 		}
@@ -79,17 +80,30 @@ export class AbstractType {
 	}
 
 	/**
-	 * To add a custom marker between date items
+	 * Displayed title in top list of periods
 	 * @param {Date} date
-	 * @return {null|string}
+	 * @return {string}
 	 */
-	checkStepPeriod(date) {
-		let nextDate = this.addUnit(date);
-		if (moment(nextDate).format("YYYY") !== moment(date).format("YYYY")) {
-			return moment(nextDate).format("YYYY");
-		}
+	periodTitle(date) {
+		return moment(date).format("YYYY-MM-DD");
+	}
 
-		return null;
+	/**
+	 * Displayed right marker of each period in list of periods
+	 * @param {Date} date
+	 * @return {string}
+	 */
+	markerLabel(date) {
+		return moment(date).format("YYYY");
+	}
+
+	/**
+	 * Number to check color of right marker
+	 * @param {Date} date
+	 * @return {number}
+	 */
+	marker(date) {
+		return parseInt(moment(date).format("YYYY"));
 	}
 
 	/**

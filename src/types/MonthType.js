@@ -12,14 +12,21 @@ class MonthType extends AbstractType {
 	unit = "month";
 
 	/**
-	 * @param {Date} date
-	 * @param {String} format
-	 * @returns {string}
+	 * @inheritDoc
 	 */
 	title(date, format = "MMMM YYYY") {
 		return moment(date)
 			.startOf("month")
 			.format(format);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	periodTitle(date) {
+		return moment(date)
+			.startOf("month")
+			.format("MMMM");
 	}
 
 	/**

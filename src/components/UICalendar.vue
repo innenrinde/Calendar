@@ -60,7 +60,9 @@
 					:key="weekDayDate(day)"
 					class="week_day"
 					:class="{
-            'week_day_inactive': !day.active
+            'week_day_inactive': !day.active,
+            'week_day_current': day.current,
+            'week_day_selected': day.selected
           }"
 				>
 					<u-i-events
@@ -174,7 +176,11 @@ export default {
 			// add weeks into month - day by day
 			let calendarDay = this.moment(calendarStart);
 			while (calendarDay <= calendarEnd) {
-				let day = new Day(this.moment(calendarDay), this.isActiveDay(calendarDay));
+				let day = new Day(this.moment(calendarDay));
+				day.active = this.isActiveDay(calendarDay);
+				day.current = this.isCurrentDay(calendarDay);
+				day.selected = this.isSelectedDay(calendarDay);
+
 				monthObj.addDay(day);
 				calendarDay.add(1, "days");
 			}
@@ -237,11 +243,27 @@ export default {
 		},
 		/**
 		 * Check if a day is active or not - if a day is part of the current month
-		 * @param date
+		 * @param {Date} date
 		 * @return {boolean}
 		 */
 		isActiveDay(date) {
 			return this.moment(this.period).month() === this.moment(date).month();
+		},
+		/**
+		 * Check if a day was selected
+		 * @param {Date} date
+		 * @return {boolean}
+		 */
+		isSelectedDay(date) {
+			return this.moment(this.period).format("YYYY-MM-DD") === this.moment(date).format("YYYY-MM-DD");
+		},
+		/**
+		 * Check if a day is current calendaristic day
+		 * @param {Date} date
+		 * @return {boolean}
+		 */
+		isCurrentDay(date) {
+			return this.moment().format("YYYY-MM-DD") === this.moment(date).format("YYYY-MM-DD");
 		},
 		/**
 		 * Return number of a week
@@ -332,7 +354,8 @@ export default {
 }
 
 .header :deep(.period) button:hover {
-	background-color: #c9c9c9;
+	animation: fadeBackgroundButton 0.5s;
+	animation-fill-mode: forwards;
 }
 
 .header :deep(.period) .label {
@@ -349,16 +372,23 @@ export default {
 	padding: 1px;
 }
 
-.header :deep(.period) .popup span {
+.header :deep(.period) .popup span span {
 	cursor: pointer;
 	padding: 7px;
 	text-align: left;
 }
 
-.header :deep(.period) .popup span.selected,
-.header :deep(.period) .popup span:hover {
-	background-color: #5188c4;
-	color: #fff;
+.header :deep(.period) .popup > span.selected,
+.header :deep(.period) .popup > span:hover {
+	outline: 2px solid #5188c4;
+	outline-offset: -2px;
+	animation: fadeBackgroundPeriod 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes fadeBackgroundPeriod {
+	from { background-color: #ffffff; }
+	to { background-color: #e0f1ff; }
 }
 /** END period **/
 
@@ -380,6 +410,13 @@ export default {
 .header .types button.selected,
 .header .types button:hover {
 	background-color: #c9c9c9;
+	animation: fadeBackgroundButton 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes fadeBackgroundButton {
+	from { background-color: #f1f1f1; }
+	to { background-color: #c9c9c9; }
 }
 
 .calendar {
@@ -421,16 +458,28 @@ export default {
 	overflow: auto;
 }
 
-/*
-.calendar .week_day > div {
-	height: 100%;
-}
-*/
-
 .calendar .week_day_inactive {
 	opacity: 0.6;
 	background-color: #f1f1f1;
 	color: #9d9d9d;
+}
+
+.calendar .week_day_selected {
+	border: solid 1px #2b5d93;
+}
+
+.calendar .week_day_selected :deep(.day) {
+	color: #2b5d93;
+	font-weight: bold;
+}
+
+.calendar .week_day_current {
+	border: solid 1px red;
+}
+
+.calendar .week_day_current :deep(.day) {
+	color: red;
+	font-weight: bold;
 }
 
 .slide-right,

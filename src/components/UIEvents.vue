@@ -4,7 +4,7 @@
 		class="day"
 		@click="sendCurrentDate"
 	>
-		{{ day.number }}
+		<span>{{ day.number }}</span>
 	</label>
 
 	<div

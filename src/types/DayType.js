@@ -12,11 +12,17 @@ class DayType extends AbstractType {
 	unit = "day";
 
 	/**
-	 * @param {Date} date
-	 * @returns {String}
+	 * @inheritDoc
 	 */
 	title(date) {
 		return moment(date).format("DD MMMM YYYY");
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	periodTitle(date) {
+		return moment(date).format("DD MMMM");
 	}
 
 	/**
@@ -47,17 +53,17 @@ class DayType extends AbstractType {
 	}
 
 	/**
-	 * To add a custom marker between date items
-	 * @param {Date} date
-	 * @return {null|string}
+	 * @inheritDoc
 	 */
-	checkStepPeriod(date) {
-		let nextDate = this.addUnit(date);
-		if (moment(date).weekday() === 6) {
-			return "W" + moment(nextDate).week();
-		}
+	markerLabel(date) {
+		return moment(date).format("YYYY") + " - W" + moment(date).week();
+	}
 
-		return null;
+	/**
+	 * @inheritDoc
+	 */
+	marker(date) {
+		return moment(date).week();
 	}
 }
 

@@ -12,8 +12,7 @@ class WeekType extends AbstractType {
 	unit = "week";
 
 	/**
-	 * @param {Date} date
-	 * @returns {string}
+	 * @inheritDoc
 	 */
 	title(date) {
 		let dateStart = moment(date)
@@ -23,6 +22,21 @@ class WeekType extends AbstractType {
 		let dateEnd = moment(date)
 			.endOf("week")
 			.format("DD MMMM YYYY");
+
+		return `${dateStart} - ${dateEnd}`;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	periodTitle(date) {
+		let dateStart = moment(date)
+			.startOf("week")
+			.format("DD MMMM");
+
+		let dateEnd = moment(date)
+			.endOf("week")
+			.format("DD MMMM");
 
 		return `${dateStart} - ${dateEnd}`;
 	}
