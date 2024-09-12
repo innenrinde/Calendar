@@ -325,10 +325,11 @@ export default {
 
 <style scoped>
 .container {
-	margin: 20px;
+	padding: 20px;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	background-color: #d7d7d7;
 }
 
 .header {
@@ -364,12 +365,14 @@ export default {
 	padding: 7px;
 	margin: 0 5px 0 5px;
 	border: solid 1px #a1a1a1;
+	background-color: #fff;
 	border-radius: 7px;
 }
 
 .header :deep(.period) .popup {
 	border: solid 1px #a1a1a1;
 	padding: 1px;
+	box-shadow: 0 2px 9px #a1a1a1;
 }
 
 .header :deep(.period) .popup span span {
@@ -453,14 +456,15 @@ export default {
 }
 
 .calendar .week_day {
+	background-color: #fff;
 	display: flex;
 	flex-direction: column;
 	overflow: auto;
 }
 
 .calendar .week_day_inactive {
-	opacity: 0.6;
-	background-color: #f1f1f1;
+	opacity: 0.9;
+	background-color: #efefef;
 	color: #9d9d9d;
 }
 

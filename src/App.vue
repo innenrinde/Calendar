@@ -21,11 +21,20 @@ export default {
 		}
 	},
 	mounted() {
-		// dummy processing events to populate some days
+		// dummy processing events to populate days
 		this.events[this.moment().format("YYYY-MM-DD")] = events;
 		this.events[this.moment().add(1, "week").format("YYYY-MM-DD")] = events;
 		this.events[this.moment().add(1, "month").format("YYYY-MM-DD")] = events;
-		this.events[this.moment().add(25, "day").format("YYYY-MM-DD")] = events;
+
+		let noDays = 0;
+		do {
+			let months = Math.floor(Math.random() * 12);
+			let days = Math.floor(Math.random() * 30);
+			this.events[this.moment().add(months, "month").add(days, "day").format("YYYY-MM-DD")] = events;
+			this.events[this.moment().subtract(months, "month").add(days, "day").format("YYYY-MM-DD")] = events;
+			noDays ++;
+		} while (noDays < 50);
+
 	},
 	methods: {
 		/**

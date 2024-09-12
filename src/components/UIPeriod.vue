@@ -7,12 +7,16 @@
 				readonly
 				:value="title"
 				@click="showPopup"
+				@blur="closePopup"
 			/>
 
 			<span
 				v-if="chooseDate"
 				class="popup"
+				:class="{ 'popup-animation': chooseDate }"
 				@wheel.passive="onWheel"
+				@mouseover="overPeriod"
+				@mouseleave="leavePeriod"
 			>
 				<span
 					v-for="item in options"
@@ -31,14 +35,14 @@
 				<div class="buttons">
 					<button
 						class="today-btn"
-						@click="setTodayDate()"
+						@click="setTodayDate"
 					>
 						Today
 					</button>
 
 					<button
 						class="close-btn"
-						@click="showPopup()"
+						@click="hidePopup"
 					>
 						Close
 					</button>
@@ -75,6 +79,7 @@ export default {
 	data() {
 		return {
 			chooseDate: false,
+			isOverPeriod: false,
 			middlePeriod: null,
 		};
 	},
@@ -131,6 +136,26 @@ export default {
 			this.chooseDate = false;
 		},
 		/**
+		 * Try to close popup if it's possible
+		 */
+		closePopup() {
+			if (!this.isOverPeriod) {
+				this.hidePopup();
+			}
+		},
+		/**
+		 * We scroll over list of periods
+		 */
+		overPeriod() {
+			this.isOverPeriod = true;
+		},
+		/**
+		 * We leave scrolling periods
+		 */
+		leavePeriod() {
+			this.isOverPeriod = false;
+		},
+		/**
 		 * Scroll up-down into dates list
 		 * @param event
 		 */
@@ -176,6 +201,16 @@ export default {
 	background-color: white;
 	z-index: 999;
 	flex-direction: column;
+	overflow: hidden;
+}
+
+.popup-animation {
+	animation: slideDownPopup 0.1s;
+}
+
+@keyframes slideDownPopup {
+	from { height: 0; }
+	to { height: 300px; }
 }
 
 .popup span.item {
