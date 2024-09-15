@@ -1,4 +1,6 @@
-# stepper
+# Calendar
+Organize your daily events by hours. Test this using
+https://powerfullapp.ro/
 
 ## Project setup
 ```
