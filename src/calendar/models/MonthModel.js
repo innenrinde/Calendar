@@ -1,4 +1,4 @@
-import { Week } from "@/models/WeekModel";
+import { Week } from "@/calendar/models/WeekModel";
 import { markRaw } from "vue";
 
 /**

@@ -2,20 +2,20 @@ export const events = [
 	{
 		hourStart: "10:30",
 		hourEnd: "11:30",
-		title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+		title: "Technical discussion including code reviews and plans for refactoring"
 	},
 	{
 		hourStart: "13:00",
 		hourEnd: "14:30",
-		title: "Lorem ipsum"
+		title: "Daily meeting"
 	}, {
 		hourStart: "13:00",
 		hourEnd: "14:30",
-		title: "dolor sit amet"
+		title: "Tasks estimations"
 	},
 	{
 		hourStart: "13:30",
 		hourEnd: "14:30",
-		title: "Adipiscing"
+		title: "Sprint review"
 	}
 ];

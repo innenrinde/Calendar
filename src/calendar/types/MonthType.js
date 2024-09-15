@@ -1,4 +1,4 @@
-import {AbstractType} from "@/types/AbstractType";
+import {AbstractType} from "@/calendar/types/AbstractType";
 import moment from "moment";
 
 /**
@@ -17,7 +17,8 @@ class MonthType extends AbstractType {
 	title(date, format = "MMMM YYYY") {
 		return moment(date)
 			.startOf("month")
-			.format(format);
+			.format(format)
+			.ucfirst();
 	}
 
 	/**
@@ -26,7 +27,8 @@ class MonthType extends AbstractType {
 	periodTitle(date) {
 		return moment(date)
 			.startOf("month")
-			.format("MMMM");
+			.format("MMMM")
+			.ucfirst();
 	}
 
 	/**

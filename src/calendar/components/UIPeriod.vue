@@ -1,63 +1,67 @@
 <template>
-	<div>
-		<button @click="prevDate">&lt;</button>
-		<div class="label">
-			<input
-				type="text"
-				readonly
-				:value="title"
-				@click="showPopup"
-				@blur="closePopup"
-			/>
+	<button @click="prevDate">
+		<font-awesome-icon :icon="['fas', 'chevron-left']" />
+	</button>
+	<div class="label">
+		<input
+			type="text"
+			readonly
+			:value="title"
+			@click="showPopup"
+			@blur="closePopup"
+		/>
 
+		<span
+			v-if="chooseDate"
+			class="popup"
+			:class="{ 'popup-animation': chooseDate }"
+			@wheel.passive="onWheel"
+			@mouseover="overPeriod"
+			@mouseleave="leavePeriod"
+		>
 			<span
-				v-if="chooseDate"
-				class="popup"
-				:class="{ 'popup-animation': chooseDate }"
-				@wheel.passive="onWheel"
-				@mouseover="overPeriod"
-				@mouseleave="leavePeriod"
+				v-for="item in options"
+				:key="item"
+				class="item"
+				:class="{ 'selected': item.selected }"
+				@click="setDate(item.value)"
 			>
+				<span>{{ item.label }}</span>
 				<span
-					v-for="item in options"
-					:key="item"
-					class="item"
-					:class="{ 'selected': item.selected }"
-					@click="setDate(item.value)"
-				>
-					<span>{{ item.label }}</span>
-					<span
-						:style="{'background-color': item.color }"
-						class="marker"
-					>{{ item.marker }}</span>
-				</span>
-
-				<div class="buttons">
-					<button
-						class="today-btn"
-						@click="setTodayDate"
-					>
-						Today
-					</button>
-
-					<button
-						class="close-btn"
-						@click="hidePopup"
-					>
-						Close
-					</button>
-				</div>
-
+					:style="{'background-color': item.color }"
+					class="marker"
+				>{{ item.marker }}</span>
 			</span>
 
-		</div>
-		<button @click="nextDate">&gt;</button>
+			<div class="buttons">
+				<button
+					class="today-btn"
+					@click="setTodayDate"
+				>
+					<font-awesome-icon :icon="['fas', 'thumbtack']" />
+					Today
+				</button>
+
+				<button
+					class="close-btn"
+					@click="hidePopup"
+				>
+					<font-awesome-icon :icon="['fas', 'xmark']" />
+					Close
+				</button>
+			</div>
+
+		</span>
+
 	</div>
+	<button @click="nextDate">
+		<font-awesome-icon :icon="['fas', 'chevron-right']" />
+	</button>
 </template>
 
 <script>
 
-import {MonthType} from "@/types/MonthType";
+import {MonthType} from "@/calendar/types/MonthType";
 
 export default {
 	name: "UIPeriod",

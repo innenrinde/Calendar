@@ -1,5 +1,5 @@
 import moment from "moment";
-import {AbstractType} from "@/types/AbstractType";
+import {AbstractType} from "@/calendar/types/AbstractType";
 
 /**
  * Calendar view week by week

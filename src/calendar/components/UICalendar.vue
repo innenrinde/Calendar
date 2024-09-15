@@ -1,21 +1,21 @@
 <template>
-	<div class="container">
 
-		<div class="header">
+	<div class="header">
 
-			<div class="types">
-				<button
-					v-for="calendar in calendarTypes"
-					:key="calendar.type"
-					:class="{ 'selected': calendarType === calendar.type }"
-					@click="switchCalendarType(calendar.type)"
-				>
-					{{ calendar.label }}
-				</button>
-			</div>
+		<div class="left">
+			<button
+				v-for="calendar in calendarTypes"
+				:key="calendar.type"
+				:class="{ 'selected': calendarType === calendar.type }"
+				@click="switchCalendarType(calendar.type)"
+			>
+				<font-awesome-icon :icon="calendar.icon" />
+				{{ calendar.label }}
+			</button>
+		</div>
 
+		<div class="center">
 			<u-i-period
-				class="period"
 				:title="title"
 				:period="period"
 				:calendar-type="calendarType"
@@ -23,14 +23,33 @@
 				@prevDate="prevDate"
 				@setDate="setDate"
 			/>
-
 		</div>
+
+		<div
+			class="right"
+		>
+			<button
+				v-for="language in locales"
+				:key="language.code"
+				:class="{ 'selected': language.code === locale }"
+				@click="setLocale(language.code)"
+			>
+				{{ language.label }}
+			</button>
+		</div>
+
+	</div>
+
+	<div class="container">
 
 		<div
 			class="calendar"
 			:class="{
-				'day_type': isDayType(),
-				'week_type': isWeekType(),
+				'calendar-lines-1': month.weeks.length === 1,
+				'calendar-lines-4': month.weeks.length === 4,
+				'calendar-lines-5': month.weeks.length === 5,
+				'calendar-lines-6': month.weeks.length === 6,
+				'calendar-columns-1': isDayType(),
 				'slide-left': slideLeft,
 				'slide-right': slideRight
 			}"
@@ -62,7 +81,8 @@
 					:class="{
             'week_day_inactive': !day.active,
             'week_day_current': day.current,
-            'week_day_selected': day.selected
+            'week_day_selected': day.selected,
+            'week_day_weekend': day.isWeekend
           }"
 				>
 					<u-i-events
@@ -80,14 +100,14 @@
 
 <script>
 
-import {Month} from "@/models/MonthModel";
-import {Day} from "@/models/DayModel";
-import {MonthType} from "@/types/MonthType";
-import {WeekType} from "@/types/WeekType";
-import {DayType} from "@/types/DayType";
-import UIPeriod from "@/components/UIPeriod.vue";
+import {Month} from "@/calendar/models/MonthModel";
+import {Day} from "@/calendar/models/DayModel";
+import {MonthType} from "@/calendar/types/MonthType";
+import {WeekType} from "@/calendar/types/WeekType";
+import {DayType} from "@/calendar/types/DayType";
+import UIPeriod from "@/calendar/components/UIPeriod.vue";
 import moment from "moment";
-import UIEvents from "@/components/UIEvents.vue";
+import UIEvents from "@/calendar/components/UIEvents.vue";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
@@ -96,13 +116,13 @@ export default {
 	components: {UIEvents, UIPeriod},
 	props: {
 		currentPeriod: {
-			type: String,
-			default: () => moment().format("YYYY-MM-DD"),
+			type: Object,
+			default: () => moment(),
 		},
 		locale: {
 			type: String,
 			validator(value) {
-				return ["ro", "en"].includes(value);
+				return ["ro", "fr", "en"].includes(value);
 			},
 		},
 		events: {
@@ -110,20 +130,33 @@ export default {
 			default: () => [],
 		},
 	},
-	emits: ["currentDate"],
+	emits: ["getCurrentPeriod", "getLocale"],
 	data() {
 		return {
 			period: null, // current period viewed in the calendar
 			calendarType: MonthType, // default calendar type viewing
 			calendarTypes: [{ // available calendar types
 				type: MonthType,
-				label: "Month"
+				label: "Month",
+				icon: ["fas", "table"],
 			}, {
 				type: WeekType,
-				label: "Week"
+				label: "Week",
+				icon: ["fas", "table-columns"],
 			}, {
 				type: DayType,
-				label: "Day"
+				label: "Day",
+				icon: ["far", "square"],
+			}],
+			locales: [{
+				code: "ro",
+				label: "RO"
+			}, {
+				code: "fr",
+				label: "FR"
+			}, {
+				code: "en",
+				label: "EN"
 			}],
 			slideLeft: false,
 			slideRight: false,
@@ -159,9 +192,15 @@ export default {
 		 */
 		weekDays() {
 			if (this.isDayType()) {
-				return [this.moment(this.period).format("ddd")];
+				return [
+					this.moment(this.period)
+						.locale(this.locale)
+						.format("dddd")
+						.ucfirst()
+				];
 			}
-			return Array.from(this.moment.weekdaysShort(true));
+
+			return Array.from(this.moment.weekdays(true)).map(item => item.ucfirst());
 		},
 		/**
 		 * List of days grouped by weeks for selected period
@@ -202,13 +241,6 @@ export default {
 		 */
 		isDayType() {
 			return this.calendarType instanceof DayType.constructor;
-		},
-		/**
-		 * Check of calendar view is on monde Week
-		 * @return {boolean}
-		 */
-		isWeekType() {
-			return this.calendarType instanceof WeekType.constructor;
 		},
 		/**
 		 * Choose viewing strategy
@@ -307,7 +339,7 @@ export default {
 		 * Retrieve current selected date
 		 */
 		emitSelectedDate() {
-			this.$emit("currentDate", this.period);
+			this.$emit("getCurrentPeriod", this.period);
 		},
 		/**
 		 * Get list of event by day
@@ -318,33 +350,78 @@ export default {
 			let date = day.date.format("YYYY-MM-DD");
 			return this.events[date] ? this.events[date] : [];
 		},
+		/**
+		 * Retrieve current selected locale
+		 * @param {String} lang
+		 */
+		setLocale(lang) {
+			this.$emit("getLocale", lang);
+		}
 	}
 };
 
 </script>
 
 <style scoped>
-.container {
-	padding: 20px;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	background-color: #d7d7d7;
-}
 
+/**  START header **/
 .header {
+	position: fixed;
 	display: flex;
 	flex-direction: row;
-	margin-bottom: 10px;
-}
-
-/** period **/
-.header :deep(.period) {
+	height: 60px;
+	padding-top: 5px;
 	width: 100%;
-	padding-left: 50px;
+	align-items: center;
+	text-align: center;
 }
 
-.header :deep(.period) button {
+.header button {
+	padding: 5px;
+	margin-right: 4px;
+	border: solid 1px #a1a1a1;
+	background-color: #f1f1f1;
+	border-radius: 7px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.header button:hover {
+	background-color: #c9c9c9;
+	animation: fadeBackgroundButton 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.header button.selected {
+	background-color: #5188c4;
+	border: solid 2px #2b5d93;
+	color: #fff;
+}
+
+.header button.selected:hover {
+	background-color: #5188c4;
+	animation: fadeBackgroundButtonSelected 0.5s;
+	animation-fill-mode: forwards;
+}
+
+/** END left **/
+.header .left {
+	width: 400px;
+	text-align: left;
+	padding-left: 10px;
+}
+
+.header .left button {
+	width: 80px;
+}
+/** END left **/
+
+/** START center **/
+.header .center {
+	width: 100%;
+}
+
+.header .center :deep(button) {
 	padding: 7px;
 	width: 30px;
 	height: 30px;
@@ -354,12 +431,12 @@ export default {
 	cursor: pointer;
 }
 
-.header :deep(.period) button:hover {
+.header .center :deep(button:hover) {
 	animation: fadeBackgroundButton 0.5s;
 	animation-fill-mode: forwards;
 }
 
-.header :deep(.period) .label {
+.header .center :deep(.label) {
 	display: inline-block;
 	width: 300px;
 	padding: 7px;
@@ -369,20 +446,20 @@ export default {
 	border-radius: 7px;
 }
 
-.header :deep(.period) .popup {
+.header .center :deep(.popup) {
 	border: solid 1px #a1a1a1;
 	padding: 1px;
 	box-shadow: 0 2px 9px #a1a1a1;
 }
 
-.header :deep(.period) .popup span span {
+.header .center :deep(.popup) span span {
 	cursor: pointer;
 	padding: 7px;
 	text-align: left;
 }
 
-.header :deep(.period) .popup > span.selected,
-.header :deep(.period) .popup > span:hover {
+.header .center :deep(.popup) > span.selected,
+.header .center :deep(.popup) > span:hover {
 	outline: 2px solid #5188c4;
 	outline-offset: -2px;
 	animation: fadeBackgroundPeriod 0.5s;
@@ -393,33 +470,50 @@ export default {
 	from { background-color: #ffffff; }
 	to { background-color: #e0f1ff; }
 }
-/** END period **/
+/** END center **/
 
-.header .types {
-	position: fixed;
+/** START right **/
+.header .right {
+	width: 400px;
+	text-align: right;
+	padding-right: 10px;
 }
+/** END right **/
 
-.header .types button {
-	padding: 5px;
-	margin-right: 4px;
-	width: 80px;
-	border: solid 1px #a1a1a1;
-	background-color: #f1f1f1;
-	border-radius: 7px;
-	cursor: pointer;
-	font-size: 12px;
-}
-
-.header .types button.selected,
-.header .types button:hover {
-	background-color: #c9c9c9;
-	animation: fadeBackgroundButton 0.5s;
-	animation-fill-mode: forwards;
-}
 
 @keyframes fadeBackgroundButton {
-	from { background-color: #f1f1f1; }
-	to { background-color: #c9c9c9; }
+	from {
+		background-color: #f1f1f1;
+		color: #000;
+	}
+	to {
+		background-color: #c9c9c9;
+		color: #000;
+	}
+}
+
+@keyframes fadeBackgroundButtonSelected {
+	from {
+		background-color: #5188c4;
+		color: #fff;
+	}
+	to {
+		background-color: #5188c4;
+		color: #fff;
+	}
+}
+
+/** END header **/
+
+
+.container {
+	padding: 60px 10px 10px 10px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #d7d7d7;
+	border-top: solid 2px #5188c4;
+	overflow: auto;
 }
 
 .calendar {
@@ -430,13 +524,24 @@ export default {
 	height: 100%;
 }
 
-.week_type {
-	grid-template-rows: 30px auto;
+.calendar-lines-1 {
+	grid-template-rows: 30px repeat(1, 1fr);
 }
 
-.day_type {
+.calendar-lines-4 {
+	grid-template-rows: 30px repeat(4, 1fr);
+}
+
+.calendar-lines-5 {
+	grid-template-rows: 30px repeat(5, 1fr);
+}
+
+.calendar-lines-6 {
+	grid-template-rows: 30px repeat(6, 1fr);
+}
+
+.calendar-columns-1 {
 	grid-template-columns: 30px auto;
-	grid-template-rows: 30px auto;
 }
 
 .calendar > div {
@@ -463,28 +568,32 @@ export default {
 }
 
 .calendar .week_day_inactive {
-	opacity: 0.9;
 	background-color: #efefef;
 	color: #9d9d9d;
 }
 
-.calendar .week_day_selected {
-	border: solid 1px #2b5d93;
-}
-
-.calendar .week_day_selected :deep(.day) {
-	color: #2b5d93;
+.calendar .week_day_current :deep(.day),
+.calendar .week_day_weekend :deep(.day) {
+	color: #fff;
 	font-weight: bold;
+	border-radius: 10px;
+	margin: 1px;
+	padding-left: 5px;
 }
 
-.calendar .week_day_current {
-	border: solid 1px red;
+.calendar .week_day_weekend :deep(.day) {
+	background-color: #cae7f8;
+	color: #000;
+	font-weight: normal;
 }
 
 .calendar .week_day_current :deep(.day) {
-	color: red;
+	background-color: #ff5f5f;
+	color: #fff;
 	font-weight: bold;
 }
+
+
 
 .slide-right,
 .slide-left {

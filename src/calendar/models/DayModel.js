@@ -68,4 +68,9 @@ export class Day {
 	get number() {
 		return this.date.date();
 	}
+
+	get isWeekend() {
+		let dayNumber = this.date.day();
+		return dayNumber === 0 || dayNumber === 6;
+	}
 }

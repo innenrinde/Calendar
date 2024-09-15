@@ -1,10 +1,11 @@
 <template>
-
+<div class="events">
 	<label
 		class="day"
 		@click="sendCurrentDate"
 	>
 		<span>{{ day.number }}</span>
+		<font-awesome-icon :icon="['fas', 'up-right-and-down-left-from-center']" />
 	</label>
 
 	<div
@@ -36,12 +37,12 @@
 		</div>
 
 	</div>
-
+</div>
 </template>
 
 <script>
 
-import {Day} from "@/models/DayModel";
+import {Day} from "@/calendar/models/DayModel";
 
 export default {
 	name: "UIEvents",
@@ -113,6 +114,20 @@ export default {
 </script>
 
 <style scoped>
+.events {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.events svg {
+	display: none;
+}
+
+.events:hover svg {
+	display: initial;
+}
+
 .day {
 	text-align: left;
 	padding: 2px;
@@ -121,6 +136,10 @@ export default {
 
 .day:hover {
 	background-color: #efefef;
+}
+
+.day svg {
+	float: right;
 }
 
 .events-list {

@@ -1,23 +1,26 @@
 <template>
-  <u-i-calendar
-		locale="en"
+  <w-calendar
+		:locale="language"
+		:key="language"
 		:events="events"
-		@currentDate="getCurrentDate"
+		@getCurrentPeriod="getCurrentPeriod"
+		@getLocale="getLocale"
 	/>
 </template>
 
 <script>
-import UICalendar from "@/components/UICalendar.vue";
 import {events} from "@/mock/events";
+import WCalendar from "@/calendar/components/WCalendar.vue";
 
 export default {
   name: 'App',
   components: {
-		UICalendar,
+		WCalendar,
   },
 	data() {
 		return {
 			events: [],
+			language: "en"
 		}
 	},
 	mounted() {
@@ -38,11 +41,17 @@ export default {
 	},
 	methods: {
 		/**
+		 * @param {Date} data
+		 */
+		getCurrentPeriod(data) {
+			console.log("current period", data);
+		},
+		/**
 		 * @param {String} data
 		 */
-		getCurrentDate(data) {
-			console.log(data);
-		}
+		getLocale(data) {
+			console.log("current locale", data);
+		},
 	}
 }
 </script>
