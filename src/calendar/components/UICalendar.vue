@@ -88,6 +88,7 @@
 					<u-i-events
 						:day="day"
 						:events="getEventsByDay(day)"
+						:is-day-type="isDayType()"
 						@setCurrentDate="eventsSetCurrentDate"
 					/>
 				</div>
@@ -158,9 +159,20 @@ export default {
 				code: "en",
 				label: "EN"
 			}],
+			weekDays: [], // list of week day based on locale and calendar type
+			month: {}, // list of week for selected month
 			slideLeft: false,
 			slideRight: false,
 		};
+	},
+	watch: {
+		locale() {
+			this.moment.locale(this.locale);
+			this.calculateCalendarViewDates();
+		},
+		calendarType() {
+			this.calculateCalendarViewDates();
+		}
 	},
 	computed: {
 		/**
@@ -186,27 +198,44 @@ export default {
 		title() {
 			return this.calendarType.title(this.period);
 		},
+	},
+	/**
+	 * Init current period to instantiate calendar
+	 */
+	beforeMount() {
+		this.moment.locale(this.locale);
+		this.period = this.currentPeriod;
+		this.calculateCalendarViewDates();
+	},
+	methods: {
+		/**
+		 * Build list of week days and list of month calendaristic days
+		 */
+		calculateCalendarViewDates() {
+			this.calculateWeekDays();
+			this.calculateMonth();
+		},
 		/**
 		 * Return week days as array of strings (short names of days)
 		 * @return {[String]}
 		 */
-		weekDays() {
+		calculateWeekDays() {
 			if (this.isDayType()) {
-				return [
+				this.weekDays = [
 					this.moment(this.period)
-						.locale(this.locale)
 						.format("dddd")
 						.ucfirst()
 				];
+			} else {
+				this.weekDays = Array.from(this.moment.weekdays(true)).map(item => item.ucfirst());
 			}
-
-			return Array.from(this.moment.weekdays(true)).map(item => item.ucfirst());
 		},
 		/**
 		 * List of days grouped by weeks for selected period
 		 * @return {Month}
 		 */
-		month() {
+		calculateMonth() {
+
 			let [calendarStart, calendarEnd] = this.calendarType.interval(this.period);
 
 			// calendar month = weeks collection
@@ -224,17 +253,8 @@ export default {
 				calendarDay.add(1, "days");
 			}
 
-			return monthObj;
-		}
-	},
-	/**
-	 * Init current period to instantiate calendar
-	 */
-	beforeMount() {
-		this.moment.locale(this.locale);
-		this.period = this.currentPeriod;
-	},
-	methods: {
+			this.month = monthObj;
+		},
 		/**
 		 * Check of calendar view is on monde Day
 		 * @return {boolean}
@@ -272,6 +292,7 @@ export default {
 		 */
 		setDate(value) {
 			this.period = value;
+			this.emitSelectedDate();
 		},
 		/**
 		 * Check if a day is active or not - if a day is part of the current month
@@ -339,6 +360,7 @@ export default {
 		 * Retrieve current selected date
 		 */
 		emitSelectedDate() {
+			this.calculateCalendarViewDates();
 			this.$emit("getCurrentPeriod", this.period);
 		},
 		/**

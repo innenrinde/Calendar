@@ -1,5 +1,8 @@
 <template>
-<div class="events">
+<div
+	class="events"
+	:class="{ 'show-icon': !isDayType }"
+>
 	<label
 		class="day"
 		@click="sendCurrentDate"
@@ -54,6 +57,10 @@ export default {
 		events: {
 			type: Array,
 			default: () => [],
+		},
+		isDayType: {
+			type: Boolean,
+			default: () => false
 		}
 	},
 	data() {
@@ -120,11 +127,12 @@ export default {
 	flex-direction: column;
 }
 
-.events svg {
+.events svg,
+.show-icon svg {
 	display: none;
 }
 
-.events:hover svg {
+.show-icon:hover svg {
 	display: initial;
 }
 

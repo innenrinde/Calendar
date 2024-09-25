@@ -2,7 +2,6 @@
 	<u-i-calendar
 		:locale="currentLocale"
 		:current-period="currentPeriod"
-		:key="currentLocale"
 		:events="events"
 		@getLocale="getLocale"
 		@getCurrentPeriod="getCurrentPeriod"
@@ -41,7 +40,7 @@ export default {
 			currentPeriod: null,
 		}
 	},
-	mounted() {
+	beforeMount() {
 		this.currentLocale = this.locale;
 		this.currentPeriod = this.period;
 	},
