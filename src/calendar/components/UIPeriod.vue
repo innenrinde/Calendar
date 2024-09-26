@@ -251,6 +251,4 @@ export default {
 .close-btn {
 	width: 30% !important;
 }
-
-
 </style>

@@ -90,6 +90,7 @@
 						:events="getEventsByDay(day)"
 						:is-day-type="isDayType()"
 						@setCurrentDate="eventsSetCurrentDate"
+						@event="selectEvent"
 					/>
 				</div>
 
@@ -97,6 +98,12 @@
 
 		</div>
 	</div>
+
+	<u-i-popup
+		v-if="selectedEvent"
+		:event="selectedEvent"
+		@close="closeEvent"
+	/>
 </template>
 
 <script>
@@ -107,14 +114,15 @@ import {MonthType} from "@/calendar/types/MonthType";
 import {WeekType} from "@/calendar/types/WeekType";
 import {DayType} from "@/calendar/types/DayType";
 import UIPeriod from "@/calendar/components/UIPeriod.vue";
-import moment from "moment";
+import moment, {locale} from "moment";
 import UIEvents from "@/calendar/components/UIEvents.vue";
+import UIPopup from "@/calendar/components/UIPopup.vue";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
 export default {
 	name: "UICalendar",
-	components: {UIEvents, UIPeriod},
+	components: {UIPopup, UIEvents, UIPeriod},
 	props: {
 		currentPeriod: {
 			type: Object,
@@ -163,6 +171,7 @@ export default {
 			month: {}, // list of week for selected month
 			slideLeft: false,
 			slideRight: false,
+			selectedEvent: null,
 		};
 	},
 	watch: {
@@ -355,6 +364,19 @@ export default {
 		eventsSetCurrentDate(day) {
 			this.setDate(day.date);
 			this.calendarType = DayType;
+		},
+		/**
+		 * Show clicked event
+		 * @param {Object} event
+		 */
+		selectEvent(event) {
+			this.selectedEvent = event;
+		},
+		/**
+		 * Close popup event
+		 */
+		closeEvent() {
+			this.selectedEvent = null;
 		},
 		/**
 		 * Retrieve current selected date
@@ -614,8 +636,6 @@ export default {
 	color: #fff;
 	font-weight: bold;
 }
-
-
 
 .slide-right,
 .slide-left {

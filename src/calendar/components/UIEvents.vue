@@ -33,6 +33,7 @@
 					v-for="title in event.events"
 					:key="title"
 					class="title"
+					@click="openEvent(event)"
 				>
 					{{ title.title }}
 				</label>
@@ -114,6 +115,13 @@ export default {
 		 */
 		sendCurrentDate() {
 			this.$emit("setCurrentDate", this.day);
+		},
+		/**
+		 * Click on an event
+		 * @param {Object} event
+		 */
+		openEvent(event) {
+			this.$emit("event", { day: this.day, ...event });
 		}
 	}
 };
