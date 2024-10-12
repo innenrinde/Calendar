@@ -1,0 +1,168 @@
+/**  START header **/
+.header {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    height: 60px;
+    padding-top: 5px;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+
+    button {
+        padding: 5px;
+        margin-right: 4px;
+        border: solid 1px $button_border;
+        background-color: $button_background;
+        border-radius: 7px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    button:hover {
+        background-color: $button_background_hover;
+        animation: fadeBackgroundButton 0.5s;
+        animation-fill-mode: forwards;
+    }
+
+    button.selected {
+        background-color: $secondary_color;
+        border: solid 2px $main_color;
+        color: #fff;
+    }
+
+    button.selected:hover {
+        background-color: $secondary_color;
+        animation: fadeBackgroundButtonSelected 0.5s;
+        animation-fill-mode: forwards;
+    }
+
+    /** START left **/
+    .left {
+        width: 400px;
+        text-align: left;
+        padding-left: 10px;
+    }
+
+    .left button {
+        width: 80px;
+    }
+    /** END left **/
+
+    /** START center **/
+    .center {
+        width: 100%;
+    }
+    /** END center **/
+
+    /** START right **/
+    .right {
+        width: 400px;
+        text-align: right;
+        padding-right: 10px;
+    }
+    /** END right **/
+}
+/** END header **/
+
+/** START calendar **/
+.container {
+    padding: 60px 10px 10px 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: $background;
+    border-top: solid 2px $secondary_color;
+    overflow: auto;
+
+    .calendar {
+        display: grid;
+        grid-template-columns: 30px repeat(7, 1fr);
+        grid-template-rows: 30px repeat(5, 1fr);
+        gap: 1px;
+        height: 100%;
+    }
+
+    .calendar-lines-1 {
+        grid-template-rows: 30px repeat(1, 1fr);
+    }
+
+    .calendar-lines-4 {
+        grid-template-rows: 30px repeat(4, 1fr);
+    }
+
+    .calendar-lines-5 {
+        grid-template-rows: 30px repeat(5, 1fr);
+    }
+
+    .calendar-lines-6 {
+        grid-template-rows: 30px repeat(6, 1fr);
+    }
+
+    .calendar-columns-1 {
+        grid-template-columns: 30px auto;
+    }
+
+    .calendar > div {
+        border: solid 1px $day_border;
+        display: grid;
+        align-content: center;
+    }
+
+    .calendar .blank,
+    .calendar .week_no,
+    .calendar .week_day_header {
+        display: grid;
+        align-content: center;
+        color: $header_color;
+        background-color: $secondary_color;
+        border: solid 1px $main_color;
+    }
+
+    .calendar .week_day {
+        background-color: $day_background;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    .calendar .week_day_inactive {
+        background-color: $inactive_day_background;
+        color: $inactive_day_color;
+    }
+
+    .calendar .week_day_current .day,
+    .calendar .week_day_weekend .day {
+        font-weight: bold;
+        border-radius: 10px;
+        margin: 1px;
+        padding-left: 5px;
+    }
+
+    .calendar .week_day_weekend .day {
+        background-color: $week_day_header;
+        color: $week_day_color;
+        font-weight: normal;
+    }
+
+    .calendar .week_day_current .day {
+        background-color: $current_day_header;
+        color: $current_day_color;
+        font-weight: bold;
+    }
+
+    .slide-right,
+    .slide-left {
+        visibility: visible;
+        transition: all .30s ease;
+    }
+
+    .slide-right {
+        transform: translateX(100%) rotate(0deg);
+    }
+
+    .slide-left {
+        transform: translateX(-100%) rotate(0deg);
+    }
+}
+/** END calendar **/

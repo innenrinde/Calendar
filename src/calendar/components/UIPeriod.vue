@@ -13,7 +13,7 @@
 
 		<span
 			v-if="chooseDate"
-			class="popup"
+			class="list-dates"
 			:class="{ 'popup-animation': chooseDate }"
 			@wheel.passive="onWheel"
 			@mouseover="overPeriod"
@@ -174,81 +174,3 @@ export default {
 };
 
 </script>
-
-<style scoped>
-.label {
-	position: relative;
-}
-
-.label input,
-.label input:focus {
-	border: none;
-	outline: none;
-	background-color: transparent;
-	width: 100%;
-	text-align: center;
-	cursor: pointer;
-}
-
-.label input:hover {
-	color: #2b5d93;
-}
-
-.popup {
-	position: absolute;
-	top: 35px;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	text-align: center;
-	width: auto;
-	background-color: white;
-	z-index: 999;
-	flex-direction: column;
-	overflow: hidden;
-}
-
-.popup-animation {
-	animation: slideDownPopup 0.1s;
-}
-
-@keyframes slideDownPopup {
-	from { height: 0; }
-	to { height: 300px; }
-}
-
-.popup span.item {
-	display: flex;
-	flex-direction: row;
-}
-
-.popup span.item span:first-child {
-	width: 100%;
-}
-
-.popup span.item span {
-	white-space: nowrap;
-}
-
-.popup span:hover,
-.popup span.selected {
-}
-
-.buttons {
-	display: flex;
-	flex-direction: row;
-}
-
-.buttons button {
-	border-radius: 2px !important;
-	margin: 2px;
-}
-
-.today-btn {
-	width: 70% !important;
-}
-
-.close-btn {
-	width: 30% !important;
-}
-</style>

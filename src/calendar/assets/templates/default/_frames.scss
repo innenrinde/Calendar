@@ -1,0 +1,39 @@
+@keyframes fadeBackgroundButton {
+  from {
+    background-color: $button_background;
+    color: $button_color;
+  }
+  to {
+    background-color: $button_background_hover;
+    color: $button_color;
+  }
+}
+
+@keyframes fadeBackgroundButtonSelected {
+  from {
+    background-color: $secondary_color;
+    color: $button_color_selected;
+  }
+  to {
+    background-color: $secondary_color;
+    color: $button_color_selected;
+  }
+}
+
+@keyframes fadeBackgroundPeriod {
+  from {
+    background-color: $event_color_hover;
+  }
+  to {
+    background-color: $event_background;
+  }
+}
+
+@keyframes slideDownPopup {
+  from {
+    height: 0;
+  }
+  to {
+    height: 300px;
+  }
+}

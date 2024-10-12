@@ -1,0 +1,93 @@
+.popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    z-index: 9999;
+
+    .container {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        top: 50%;
+        left: 50%;
+        height: 400px;
+        width: 400px;
+        padding: 20px;
+        margin-left: -200px;
+        margin-top: -200px;
+        background-color: #fff;
+        border: solid 1px #000;
+        text-align: center;
+    }
+
+    .container sup {
+        font-size: 12px;
+    }
+
+    .container .content {
+        height: 100%;
+        overflow: auto;
+    }
+
+    .shadow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #1f1d1d;
+        opacity: 0.4;
+    }
+
+    .dates {
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    .dates label:first-child {
+        background-color: $event_background;
+        padding: 5px;
+        border-radius: 10px;
+        width: 80px;
+        display: inline-block;
+    }
+
+    .dates label:last-child {
+        font-weight: bold;
+        padding: 5px;
+    }
+
+    .event label:first-child {
+        text-align: left;
+        background-color: $event_background;
+        padding: 5px;
+        margin-top: 10px;
+        border-radius: 10px;
+        border: dashed 1px $event_border;
+        display: block;
+    }
+
+    .event label:last-child {
+        text-align: left;
+        padding: 5px 5px 0 5px;
+        margin-left: 10px;
+        display: block;
+        border-left: solid 3px $event_background;
+    }
+
+    button {
+        padding: 5px;
+        margin-right: 4px;
+        border: solid 1px $button_color;
+        background-color: $button_background;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+    }
+
+    button:hover {
+        background-color: $button_background_hover;
+    }
+}

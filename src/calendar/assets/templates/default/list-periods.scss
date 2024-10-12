@@ -1,0 +1,108 @@
+.header .center {
+    button {
+        padding: 7px;
+        width: 30px;
+        height: 30px;
+        border: solid 1px #a1a1a1;
+        background-color: #f1f1f1;
+        border-radius: 30px;
+        cursor: pointer;
+        margin: 0;
+    }
+
+    button:hover {
+        animation: fadeBackgroundButton 0.5s;
+        animation-fill-mode: forwards;
+    }
+
+    .label {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+        padding: 7px;
+        margin: 0 5px 0 5px;
+        border: solid 1px #a1a1a1;
+        background-color: #fff;
+        border-radius: 7px;
+
+        input,
+        input:focus {
+            border: none;
+            outline: none;
+            background-color: transparent;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        input:hover {
+            color: #2b5d93;
+        }
+    }
+
+    .list-dates {
+        position: absolute;
+        top: 35px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        text-align: center;
+        width: auto;
+        background-color: white;
+        z-index: 999;
+        flex-direction: column;
+        overflow: hidden;
+        border: solid 1px #a1a1a1;
+        padding: 1px;
+        box-shadow: 0 2px 9px #a1a1a1;
+
+        span span {
+            cursor: pointer;
+            padding: 7px;
+            text-align: left;
+        }
+
+        > span.selected,
+        > span:hover {
+            outline: 2px solid #5188c4;
+            outline-offset: -2px;
+            animation: fadeBackgroundPeriod 0.5s;
+            animation-fill-mode: forwards;
+        }
+
+        span.item {
+            display: flex;
+            flex-direction: row;
+        }
+
+        span.item span:first-child {
+            width: 100%;
+        }
+
+        span.item span {
+            white-space: nowrap;
+        }
+    }
+
+    .popup-animation {
+        animation: slideDownPopup 0.1s;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .buttons button {
+        border-radius: 2px !important;
+        margin: 2px;
+    }
+
+    .today-btn {
+        width: 70% !important;
+    }
+
+    .close-btn {
+        width: 30% !important;
+    }
+}

@@ -62,3 +62,7 @@ export default {
 	}
 }
 </script>
+
+<style lang="scss">
+@import "../assets/templates/default/style";
+</style>

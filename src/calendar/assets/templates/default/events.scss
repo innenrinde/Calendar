@@ -1,0 +1,70 @@
+.show-icon svg {
+    display: none;
+}
+
+.show-icon:hover svg {
+    display: initial;
+}
+
+.events {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .day {
+        text-align: left;
+        padding: 2px;
+        cursor: pointer;
+    }
+
+    .day:hover {
+        background-color: $day_hover;
+    }
+
+    .day svg {
+        float: right;
+    }
+
+    .events-list {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    .event {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background-color: $event_background;
+        margin: 1px;
+        padding: 1px;
+    }
+
+    .event label {
+        margin-bottom: 1px;
+    }
+
+    .event .hour {
+        width: 40px;
+        font-size: 10px;
+    }
+
+    .event .titles-list {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event .title {
+        border: dashed 1px $event_border;
+        color: $event_color;
+        width: 100%;
+        text-align: left;
+    }
+
+    .event .title:hover {
+        background-color: $event_background_hover;
+        color: $event_color_hover;
+        cursor: pointer;
+    }
+}
