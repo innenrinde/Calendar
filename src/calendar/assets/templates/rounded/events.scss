@@ -1,0 +1,85 @@
+.show-icon svg {
+    display: none;
+}
+
+.show-icon:hover svg {
+    display: initial;
+}
+
+.events {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-size: 11px;
+
+    .day {
+        text-align: left;
+        padding: 2px;
+        cursor: pointer;
+    }
+
+    .day:hover {
+        background-color: $day_hover;
+    }
+
+    .day svg {
+        float: right;
+        margin: 2px 2px 0 0;
+    }
+
+    .events-list {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        scrollbar-width: thin;
+        scrollbar-color: $event_background_hover transparent;
+    }
+
+    .event {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        background-color: $event_background;
+        margin: 1px;
+        padding: 1px;
+
+        > div:first-child::before {
+            content: "\2022";
+            margin-right: 4px;
+        }
+
+        label {
+            margin-bottom: 1px;
+        }
+
+        .hour {
+            width: 40px;
+            font-size: 10px;
+        }
+
+        .titles-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+
+            label {
+                height: 14px;
+                overflow: hidden;
+            }
+        }
+
+        .title {
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        &:hover {
+            border-radius: 5px;
+            color: $event_color;
+            animation: fadeBackgroundEvent 1s;
+            animation-fill-mode: forwards;
+        }
+    }
+
+}

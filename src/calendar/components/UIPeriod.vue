@@ -19,6 +19,13 @@
 			@mouseover="overPeriod"
 			@mouseleave="leavePeriod"
 		>
+      <button
+        class="up-period"
+        title="Use scroll as well"
+        @click="clickUpPeriod"
+      >
+        <font-awesome-icon :icon="['fas', 'chevron-left']" />
+      </button>
 			<span
 				v-for="item in options"
 				:key="item"
@@ -32,6 +39,12 @@
 					class="marker"
 				>{{ item.marker }}</span>
 			</span>
+      <button
+        class="down-period"
+        title="Use scroll as well"
+        @click="clickDownPeriod">
+        <font-awesome-icon :icon="['fas', 'chevron-left']" />
+      </button>
 
 			<div class="buttons">
 				<button
@@ -170,6 +183,12 @@ export default {
 				this.middlePeriod = this.calendarType.subtractUnit(this.middlePeriod);
 			}
 		},
+    clickUpPeriod() {
+      this.middlePeriod = this.calendarType.subtractUnit(this.middlePeriod);
+    },
+    clickDownPeriod() {
+      this.middlePeriod = this.calendarType.addUnit(this.middlePeriod);
+    }
 	}
 };
 

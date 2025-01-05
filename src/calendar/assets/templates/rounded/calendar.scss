@@ -1,5 +1,7 @@
 /**  START header **/
 .header {
+    font-family: $font_family;
+    font-weight: $font_weight;
     position: fixed;
     display: flex;
     flex-direction: row;
@@ -10,31 +12,33 @@
     text-align: center;
 
     button {
+        font-family: $font_family;
+        font-weight: 300;
         padding: 5px;
         margin-right: 4px;
         border: solid 1px $button_border;
         background-color: $button_background;
-        border-radius: 7px;
+        border-radius: 20px;
         cursor: pointer;
-        font-size: 12px;
-    }
 
-    button:hover {
-        background-color: $button_background_hover;
-        animation: fadeBackgroundButton 0.5s;
-        animation-fill-mode: forwards;
-    }
+        svg {
+            display: none;
+        }
 
-    button.selected {
-        background-color: $secondary_color;
-        border: solid 2px $main_color;
-        color: #fff;
-    }
+        &:hover {
+            background-color: $button_background_hover;
+            animation: fadeBackgroundButton 0.5s;
+            animation-fill-mode: forwards;
+        }
 
-    button.selected:hover {
-        background-color: $secondary_color;
-        animation: fadeBackgroundButtonSelected 0.5s;
-        animation-fill-mode: forwards;
+        &.selected {
+            border: solid 2px $main_color;
+        }
+
+        &.selected:hover {
+            animation: fadeBackgroundButtonSelected 0.5s;
+            animation-fill-mode: forwards;
+        }
     }
 
     /** START left **/
@@ -42,16 +46,24 @@
         width: 100%;
         text-align: left;
         padding-left: 10px;
-    }
 
-    .left button {
-        width: 80px;
+        button {
+            width: 80px;
+        }
     }
     /** END left **/
 
     /** START center **/
     .center {
         white-space: nowrap;
+
+        button {
+            border: none !important;
+
+            svg {
+                display: inline;
+            }
+        }
     }
     /** END center **/
 
@@ -60,6 +72,10 @@
         width: 100%;
         text-align: right;
         padding-right: 10px;
+
+        button {
+            width: 35px;
+        }
     }
     /** END right **/
 }
@@ -67,13 +83,20 @@
 
 /** START calendar **/
 .container {
+
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.2em;
+    font-size: 12px;
+
     padding: 60px 10px 10px 10px;
     height: 100%;
     display: flex;
     flex-direction: column;
     background-color: $background;
-    border-top: solid 2px $secondary_color;
     overflow: auto;
+    color: #444746;
 
     .calendar {
         display: grid;
@@ -81,6 +104,23 @@
         grid-template-rows: 30px repeat(5, 1fr);
         gap: 1px;
         height: 100%;
+
+        > div {
+            display: grid;
+            align-content: center;
+        }
+
+        > div:first-child {
+            border-radius: 20px 0 0 0;
+        }
+
+        > div:last-child {
+            border-radius: 0 0 20px 0;
+        }
+
+        > div:nth-child(8) {
+            border-radius: 0 20px 0 0;
+        }
     }
 
     .calendar-lines-1 {
@@ -103,20 +143,12 @@
         grid-template-columns: 30px auto;
     }
 
-    .calendar > div {
-        border: solid 1px $day_border;
-        display: grid;
-        align-content: center;
-    }
-
     .calendar .blank,
     .calendar .week_no,
     .calendar .week_day_header {
         display: grid;
         align-content: center;
-        color: $header_color;
-        background-color: $secondary_color;
-        border: solid 1px $main_color;
+        background-color: $header_color;
     }
 
     .calendar .week_day {
@@ -124,6 +156,10 @@
         display: flex;
         flex-direction: column;
         overflow: auto;
+
+        .day {
+            border-radius: 10px;
+        }
     }
 
     .calendar .week_day_inactive {
@@ -149,6 +185,11 @@
         background-color: $current_day_header;
         color: $current_day_color;
         font-weight: bold;
+
+        span::after {
+            content: "(today)";
+            font-weight: normal;
+        }
     }
 
     .slide-right,

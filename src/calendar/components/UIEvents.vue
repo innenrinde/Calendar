@@ -21,13 +21,15 @@
 			:key="event"
 			class="event"
 		>
-			<label class="hour">
-				{{ hours(event.hourStart) }}<sup>{{ minutes(event.hourStart) }}</sup>
-			</label>
-			<label>-</label>
-			<label class="hour">
-				{{ hours(event.hourEnd) }}<sup>{{ minutes(event.hourEnd) }}</sup>
-			</label>
+      <div>
+        <label class="hour">
+          {{ hours(event.hourStart) }}<sup>{{ minutes(event.hourStart) }}</sup>
+        </label>
+        <label>-</label>
+        <label class="hour">
+          {{ hours(event.hourEnd) }}<sup>{{ minutes(event.hourEnd) }}</sup>
+        </label>
+      </div>
 			<div class="titles-list">
 				<label
 					v-for="title in event.events"
