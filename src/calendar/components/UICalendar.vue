@@ -122,7 +122,11 @@ const DATE_FORMAT = "YYYY-MM-DD";
 
 export default {
 	name: "UICalendar",
-	components: {UIPopup, UIEvents, UIPeriod},
+	components: {
+    UIPopup,
+    UIEvents,
+    UIPeriod
+  },
 	props: {
 		currentPeriod: {
 			type: Object,

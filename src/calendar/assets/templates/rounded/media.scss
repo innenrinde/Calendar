@@ -1,0 +1,42 @@
+@media (max-width: 950px) {
+  .header {
+    grid-template:
+          "type languages" auto
+          "period period" auto
+          / 1fr 1fr;
+
+    .left {
+      button {
+        font-size: 10px;
+        width: 55px;
+      }
+    }
+    .right {
+      button {
+        font-size: 10px;
+        width: 30px;
+      }
+    }
+  }
+
+  .container {
+    padding: 85px 10px 10px 10px;
+  }
+}
+
+@media (max-width: 550px) {
+  .left {
+    button {
+      width: auto;
+      padding: 2px;
+    }
+  }
+
+  .right {
+    button {
+      width: auto;
+      padding: 2px;
+    }
+  }
+
+}

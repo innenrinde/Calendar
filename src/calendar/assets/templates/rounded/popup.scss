@@ -10,28 +10,29 @@
 
     .container {
         position: fixed;
-        display: flex;
-        flex-direction: column;
         top: 50%;
         left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
         height: 400px;
-        width: 400px;
+        min-width: 200px;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
         padding: 20px;
-        margin-left: -200px;
-        margin-top: -200px;
         background-color: #fff;
         border: solid 1px #000;
         border-radius: 20px;
         text-align: center;
-    }
 
-    .container sup {
-        font-size: 12px;
-    }
+        sup {
+            font-size: 12px;
+        }
 
-    .container .content {
-        height: 100%;
-        overflow: auto;
+        .content {
+            height: 100%;
+            overflow: auto;
+        }
     }
 
     .shadow {
