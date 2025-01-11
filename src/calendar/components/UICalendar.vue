@@ -289,7 +289,6 @@ export default {
 		 */
 		prevDate() {
 			this.slideRight = true;
-			this.emitSelectedDate();
 		},
 		/**
 		 * Calculate next period based on chosen strategy
@@ -297,7 +296,6 @@ export default {
 		 */
 		nextDate() {
 			this.slideLeft = true;
-			this.emitSelectedDate();
 		},
 		/**
 		 * Catch date from period component
@@ -360,6 +358,8 @@ export default {
 			}
 
 			this.slideLeft = this.slideRight = false;
+
+      this.emitSelectedDate();
 		},
 		/**
 		 * Retrieve date for selected events component

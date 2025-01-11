@@ -183,9 +183,15 @@ export default {
 				this.middlePeriod = this.calendarType.subtractUnit(this.middlePeriod);
 			}
 		},
+    /**
+     * Click on arrow button to choose a prev date
+     */
     clickUpPeriod() {
       this.middlePeriod = this.calendarType.subtractUnit(this.middlePeriod);
     },
+    /**
+     * Click on arrow button to choose a next date
+     */
     clickDownPeriod() {
       this.middlePeriod = this.calendarType.addUnit(this.middlePeriod);
     }
